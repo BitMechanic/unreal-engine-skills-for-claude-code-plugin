@@ -6,11 +6,13 @@ Node Ninja includes the toolsets currently named RCTools. Tool, class, and resou
 
 The direct Node Ninja MCP server supplies domain descriptions during initialization and workflow resources through MCP `resources/list` and `resources/read`. Discover those resources through the client's supported resource interface. Current URIs include `rctools://guides/` and `rctools://index/`; use the exact returned URI. Read the getting-started guide and only the domain guides needed for unfamiliar work. Read the patterns guide for capture, reuse, import, or programmatic batching.
 
-These guides are maintained with the implementation. Keep API details there rather than copying a tool catalogue into this skill. If the connection or client does not expose resources, use its available schemas and relevant project instructions; do not invent a guide-reading tool or assume Epic's AgentSkillToolset contains these resources (the native Animation skill below returns its guide text, not an MCP resource).
+These guides are maintained with the implementation. Keep API details there rather than copying a tool catalogue into this skill. If the connection or client does not expose resources, use its available schemas and relevant project instructions; do not invent a guide-reading tool or assume Epic's AgentSkillToolset contains these resources (the native Animation and StateTree skills below return their guide text, not MCP resources).
 
 For gameplay Animation Blueprints, AnimGraphs, state machines, Chooser selection or Animation pattern reuse, discover Epic's native `ListSkills` and `GetSkills` operations. Select the installed Animation Authoring skill by its returned description and path, then read it before loading detailed schemas. It serves the maintained Animation guide; retrieval does not search or import the pattern library. If the skill is absent or filtered out, use the Animation guide/resource route above and the discovered tool schemas.
 
-Use Epic `list_toolsets`, `describe_toolset` and `call_tool` with returned identifiers for the Animation tools; ordinary K2 work remains with Epic BlueprintTools. Keep parameters and action lists in the served schemas and owner guide rather than duplicating them here.
+For StateTree assets (states, tasks and conditions, transitions, parameters and bindings), discover the same native operations and select the installed StateTree Authoring skill by its returned description and path, then read it before loading detailed schemas. It serves the maintained StateTree guide. Inspect results with Epic StateTreeTools; attaching a tree to a controller or running it is separate work. If the skill is absent or filtered out, use the StateTree guide/resource route above and the discovered tool schemas.
+
+Use Epic `list_toolsets`, `describe_toolset` and `call_tool` with returned identifiers for the Animation and StateTree tools; ordinary K2 work remains with Epic BlueprintTools. Keep parameters and action lists in the served schemas and owner guide rather than duplicating them here.
 
 ## Choose the operation by capability
 
