@@ -15,7 +15,8 @@ is_project_root() {
   # the Unreal source tree contains an `Engine` module at
   # `Engine/Source/Runtime/Engine`, so walking up from a Runtime module would
   # otherwise short-circuit at `Source/Runtime` and mis-identify it as the root.
-  local directory="$1"
+  # A root '/' must join as '/file', not '//file' (a Windows network path).
+  local directory="${1%/}"
   [ -f "$directory/GenerateProjectFiles.bat" ] && return 0
   [ -f "$directory/GenerateProjectFiles.sh" ] && return 0
   [ -f "$directory/GenerateProjectFiles.command" ] && return 0
@@ -50,10 +51,11 @@ project_type="game"
 [ -d "$project_root/Engine" ] && project_type="engine"
 
 uproject_filename=""
+uproject_count=0
 for candidate in "$project_root"/*.uproject; do
   if [ -e "$candidate" ]; then
     uproject_filename="$(basename "$candidate")"
-    break
+    uproject_count=$((uproject_count + 1))
   fi
 done
 
@@ -66,11 +68,13 @@ debug "project root: $project_root (type=$project_type, uproject=$uproject_filen
 context="This working directory is an Unreal Engine project."
 if [ "$project_type" = "engine" ]; then
   context="$context It is an Engine source tree."
+elif [ "$uproject_count" -gt 1 ]; then
+  context="$context Multiple .uproject files are present; confirm the intended project before editor operations."
 elif [ -n "$uproject_filename" ]; then
   context="$context The project is \`$uproject_filename\`."
 fi
 context="$context Prefer Unreal Engine conventions (C++/UObject patterns, Slate, UHT reflection) when suggesting code."
-context="$context Use the \`unreal-mcp\` skill for tasks that involve driving the Unreal Editor via MCP."
+context="$context Use the \`unreal-mcp\` skill to combine Epic and available Node Ninja tools; Node Ninja includes RCTools. Discover the installed tool names."
 if [ "$mcp_config_present" = "true" ]; then
   context="$context An \`.mcp.json\` is already present at the project root."
 else

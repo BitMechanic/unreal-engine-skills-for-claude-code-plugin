@@ -1,6 +1,6 @@
 ---
 name: unreal-skill
-description: "Use this skill when creating, editing, or reviewing an Unreal Engine Agent Skill, a named bundle of instructions registered with the unreal-mcp server (distinct from Claude Code's harness skills under `.claude/skills/`). Trigger when the user wants to add or change a skill that the in-editor agent will load. Concrete triggers: 'create a new Agent Skill', 'add a skill for X workflow', 'edit/update this skill', 'review my skill', 'make a Python skill class', 'create a skill UAsset', 'register a skill so Claude picks it up'; writing or editing a `SKILL.md` inside a UE plugin's `Skills/` or `Python/skills/` folder; defining a Python skill class registered with the skill registry; calling `CreateSkill`, `ListSkills`, or `GetSkills` MCP tools; designing a skill's name, description, or instruction body. SKIP for: authoring a toolset (use create-toolset), invoking an existing skill at runtime (use unreal-mcp), editing harness-level Claude Code skills under `.claude/skills/` or `~/.claude/skills/`, or generic uses of the word 'skill'."
+description: "Create, edit, or review an Unreal Engine Agent Skill exposed by the editor, including C++ or Python skill classes and Blueprint skill assets. Use for project/plugin workflow instructions, descriptions, and registration. Covers Node Ninja and Epic workflows. For implementing tools use create-toolset; for running existing editor workflows use unreal-mcp. Excludes client-side Claude Code skill files."
 ---
 
 # Unreal Skill
@@ -29,10 +29,13 @@ Work through these questions before writing anything.
 
 **1. Does the skill already exist?** Call `ListSkills` via MCP to see all registered skills in the project, then `GetSkills` on anything relevant. If the capability is already covered, point the user to the existing skill rather than creating a new one.
 
-**2. Choose the implementation path.** Two paths exist and the choice depends on where the skill lives:
+For Node Ninja (including RCTools), also check its installed MCP guide resources. Those are maintained with the plugin and are not automatically Agent Skills. Reuse existing guidance; add an Agent Skill only for workflow knowledge that is missing. Discover identifiers at runtime so instructions remain useful across the planned RCTools rename.
 
-- **Python class**: The right choice when the skill is part of a code plugin. It lives alongside the plugin's Python toolsets, is version-controlled with the plugin, and is registered automatically when the plugin loads.
-- **UAsset**: The right choice when the skill is project-specific and doesn't belong in a plugin. Create it directly in the Content Browser using `CreateSkill` via MCP. No code required.
+**2. Choose the implementation path.** Reuse the owner's existing language and maintained instructions:
+
+- **C++ class**: Use the existing integration module when the owner already supplies a C++ guide. Node Ninja's Animation, StateTree and Dungeon skills use this path without a second guide body or registry.
+- **Python class**: Use the plugin's existing Python package when its instructions and toolsets live there. It is version-controlled with the plugin and registers when imported.
+- **Blueprint skill asset**: Use for project-specific guidance that does not belong in a code plugin. `CreateSkill` creates a Blueprint derived from `UAgentSkill` and returns its generated-class path.
 
 ## Structure
 
@@ -42,11 +45,21 @@ Every Unreal skill has two fields.
 
 **Instructions**: The skill's payload. The actual guidance the agent follows when the skill is active. Apply the principles above: focus on what tools can't teach and cut anything not essential.
 
-The agent discovers and dispatches tools at runtime through the unreal-mcp meta-tools (`list_toolsets`, `describe_toolset`, `call_tool`), so write instructions that assume the agent will find the tools it needs rather than naming a fixed toolset list.
+The agent discovers tools at runtime through Epic's meta-tools (`list_toolsets`, `describe_toolset`, `call_tool`) or the client's native tool discovery, depending on the connection. Write instructions that assume the agent will find the tools it needs rather than naming a fixed toolset list.
+
+## C++ Skills
+
+Derive a reflected `UCLASS` from `UAgentSkill` using the installed `ToolsetRegistry/AgentSkill.h` contract. Set a non-empty `Description` in the constructor. Reuse the owner's guide from `FString GeneratePrompt_Implementation(const FString& InitialInstructions) const` rather than copying instructions into the class.
+
+Keep the class in the existing plugin module and use its established ToolsetRegistry dependency. Epic's derived-class discovery finds it after the module loads, subject to the configured skill filters; no manual tool registration is needed. Keep Epic and the engine unchanged.
+
+`GetDetails` passes the skill's stored instructions to `GeneratePrompt`; `InitialInstructions` is not the user's current request. Retrieval should return guidance, without searching or importing a pattern library, compiling, saving, or mutating assets. Explicit tool calls perform those actions. `ListSkills` may load skill classes, so do not promise globally load-free discovery.
+
+Build through the project's normal process, then verify the exact path returned by `ListSkills` with `GetSkills`. Reuse existing discovery, guide-equality and retrieval-purity evidence when the implementation is unchanged.
 
 ## Python Skills
 
-A Python skill is a `UAgentSkill` subclass defined in a Python file inside a plugin. Use this path when the skill belongs to a code plugin and should be version-controlled with the plugin.
+A Python skill is a `UAgentSkill` subclass defined in a Python file inside a plugin. Use this path for the plugin's existing Python skill implementation.
 
 ### Authoring
 
@@ -87,7 +100,7 @@ python Engine/Plugins/Experimental/ToolsetRegistry/Content/Python/toolset_regist
 
 ## UAsset Skills
 
-A UAsset skill is a `UAgentSkill` instance saved as a Content Browser asset. Use this path for project-specific skills that don't belong in a plugin and require no code.
+A skill asset is a Blueprint derived from `UAgentSkill`. The discovery tools return its generated-class path and read its default object's guidance. Use this path for project-specific instructions that do not belong in a code plugin.
 
 ### Authoring
 

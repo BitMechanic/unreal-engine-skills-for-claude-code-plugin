@@ -1,12 +1,18 @@
-# Unreal Engine Skills for Claude Code
+# Node Ninja Unreal Engine Skills
 
-Control Unreal Editor directly from Claude Code via MCP. Hundreds of tools exposed via Unreal's ToolsetRegistry across 30+ toolsets: actors, blueprints, materials, Niagara, Control Rigs, Sequencer, State Trees, widgets, Gameplay Ability System, automation testing, and more.
+Use Node Ninja and Epic's Unreal Editor tools together from Claude Code. This fork extends Unreal Engine Skills with guidance for choosing capabilities, reading the installed Node Ninja guides, and combining native edits with analysis, patterns, and procedural workflows.
+
+**Node Ninja includes RCTools.** Existing toolsets, classes, and resources retain their installed names until the planned rename. The skills discover those names rather than assuming `rct` identifiers have already become `nn` identifiers.
+
+This repository contains instructions and a project-detection hook. It does not bundle the Unreal plugins or a static tool catalogue. It derives from Unreal Engine Skills for Claude Code by Thomas Mansencal / Epic Games; the upstream MIT notice is retained in [LICENSE](LICENSE).
 
 ## Contents
 
 ### Skills
 
-- **`unreal-mcp`** (`skills/unreal-mcp`) - instructions and workflows for driving the Unreal Editor via MCP.
+- **`unreal-mcp`** (`skills/unreal-mcp`) - use Node Ninja and Epic tools through the routes exposed by the running editor; includes a focused [Node Ninja reference](skills/unreal-mcp/references/nodeninja.md).
+- **`unreal-skill`** (`skills/unreal-skill`) - author project/plugin Agent Skills for workflow knowledge that discovery alone cannot supply.
+- **`create-toolset`** (`skills/create-toolset`) - author tools while reusing existing capabilities across Epic and Node Ninja.
 
 ### Hooks
 
@@ -14,60 +20,46 @@ Control Unreal Editor directly from Claude Code via MCP. Hundreds of tools expos
 
 ## Prerequisites
 
-1. **Unreal Editor** with the **ModelContextProtocol** and **AllToolsets** plugins enabled (`AllToolsets` provides the tools; the server exposes none without it)
+1. **Unreal Editor** with **ModelContextProtocol** and **AllToolsets**, or the specific Epic toolset plugins needed for your work.
 2. **Editor running to execute tools**, with the MCP server started. Run `ModelContextProtocol.StartServer`, or enable `bAutoStartServer` through `skills/unreal-mcp/references/setup.md`. The optional proxy can keep the client connection open while the editor is stopped.
 3. **A bash shell on `PATH`** - required for the `SessionStart` hook (see **Platform Support**)
+4. **Node Ninja / RCTools** enabled in the target Unreal project for its capabilities. Builds with the Epic integration register categories such as `RCTools.Blueprint` through Epic's ToolsetRegistry. The direct Node Ninja MCP connection supplies its native tools and guide resources. See [Node Ninja setup](skills/unreal-mcp/references/setup.md#5-node-ninja--rctools).
 
 ## Platform Support
 
 Supported: **macOS**, **Linux**, and **Windows via Git Bash or WSL**.
 
-The `SessionStart` hook is a bash script (`hooks/unreal-context.sh`) invoked by `hooks/hooks.json` as `bash ${CLAUDE_PLUGIN_ROOT}/hooks/unreal-context.sh`. It requires a working `bash` on `PATH`:
+The `SessionStart` hook is a bash script (`hooks/unreal-context.sh`) invoked by `hooks/hooks.json` as `bash "${CLAUDE_PLUGIN_ROOT}/hooks/unreal-context.sh"`. It requires a working `bash` on `PATH`:
 
 - **macOS / Linux:** works out of the box.
 - **Windows:** install **Git for Windows** (provides Git Bash) or run Claude Code under **WSL**. Native PowerShell without one of those does not have `bash` on `PATH`, and the hook will not run. The plugin's MCP tools still work; you just lose the short project-context note the hook injects at session start. There is no separate PowerShell companion script today.
 
 ## Installation
 
-This plugin is published in Anthropic's official Claude Code plugin marketplace, `claude-plugins-official`, which is available automatically when you start Claude Code. Browse it at [claude.com/plugins](https://claude.com/plugins) or in the **Discover** tab of the `/plugin` panel.
+This fork has its own plugin identity, `nodeninja-unreal-engine-skills`. The upstream marketplace package does not install these Node Ninja extensions.
 
-### Install for a single developer
+### Load this checkout
 
-In Claude Code:
+Start Claude Code from your Unreal project's directory, pointing at this checkout:
 
-```
-/plugin install unreal-engine-skills-for-claude-code@claude-plugins-official
-```
-
-If the official marketplace is not present, add it first, then run the install command above:
-
-```
-/plugin marketplace add anthropics/claude-plugins-official
+```powershell
+claude --plugin-dir "C:\path\to\nodeninja-unreal-engine-skills"
 ```
 
-### Install for a team
-
-Commit this to `.claude/settings.json` in the project that should use the plugin. Anyone who trusts the project folder is prompted to install it automatically:
-
-```json
-{
-  "enabledPlugins": {
-    "unreal-engine-skills-for-claude-code@claude-plugins-official": true
-  }
-}
-```
+On other machines, substitute the absolute path to this fork. `--plugin-dir` loads the plugin for that session. Use this fork in place of the upstream skill package for the project to avoid competing copies of the same skills. This does not install or configure either Unreal MCP server.
 
 ## Verification
 
 1. Launch Unreal Editor, then run `ModelContextProtocol.StartServer` in the console to start the MCP server.
 2. Check the Output Log for MCP server startup messages.
-3. In Claude Code, run `/plugin`. The **Installed** tab should list `unreal-engine-skills-for-claude-code` as enabled. This confirms the plugin itself (skills, hooks) is loaded.
+3. In Claude Code, run `/plugin` and confirm `nodeninja-unreal-engine-skills` is loaded.
 4. Run `/mcp`. Check for `unreal-mcp`, or `unreal-mcp-proxy` if you installed the proxy. A connected proxy does not prove that Unreal is reachable.
 5. Try: "List all actors in the current level".
+6. For Node Ninja, discover its categories in Epic's toolset listing or its direct connection, read a relevant guide if available, and make a read-only domain query. Neither a cached catalogue nor this skill package proves that the Unreal plugin is running.
 
 ## Configuration
 
-The default port is **8000** with URL path `/mcp`. If the port is in use, run `ModelContextProtocol.StartServer <port>` in the console with a different port number.
+Epic's default port is **8000** with URL path `/mcp`. If the port is in use, run `ModelContextProtocol.StartServer <port>` in the console with a different port number. A direct Node Ninja connection has its own configured endpoint; do not overwrite it with Epic's URL.
 
 > **Note:** This plugin does not ship a static `.mcp.json` file. Run `ModelContextProtocol.GenerateClientConfig ClaudeCode` in the editor console to generate it from the current server port and URL; re-run after changing either.
 
@@ -83,7 +75,7 @@ See [proxy setup](skills/unreal-mcp/references/setup.md#4-optional-install-the-p
 
 ## Security
 
-Installing this plugin gives Claude broad, live access to the running Unreal Editor. Treat that access the same way you would treat running arbitrary code from an assistant, because in practice it is.
+Configured Unreal MCP connections give the assistant broad, live editor access. This instruction package does not install or enable those servers. Treat their execution access like running code from an assistant.
 
 **Localhost is not a trust boundary.** The MCP server binds to `localhost:8000` with origin validation. Origin validation protects against a browser tab talking to the server, but any process running as the same user on the same machine can connect. Do not run the MCP server on shared or untrusted machines, and do not expose the port outside the loopback interface.
 
@@ -95,7 +87,7 @@ Installing this plugin gives Claude broad, live access to the running Unreal Edi
 
 ## What's Available
 
-All tools are auto-discovered by Claude Code via MCP. No manual configuration needed. Tools cover the full editor surface across these domains:
+After the editor plugins and connections are configured, discover the tools supported by that installation. Epic's toolsets cover domains including:
 
 - **Actors and Scene** - spawn, transform, inspect, and delete actors; manage components and outliner folders
 - **Blueprints** - create, edit graphs, add nodes, connect pins, manage variables, compile
@@ -110,3 +102,5 @@ All tools are auto-discovered by Claude Code via MCP. No manual configuration ne
 - **Testing** - discover, run, and inspect C++ automation tests with detailed results
 - **Editor** - screenshots, camera control, actor/asset selection, content browser, log inspection
 - **Scripting** - batch multiple tool calls into a single Python script execution
+
+Node Ninja adds focused semantic context, native snapshot patterns, domain authoring and analysis, PCG cook/probe workflows, and dungeon/room construction. Exact coverage depends on the installed plugin; the live schemas and guides are authoritative.

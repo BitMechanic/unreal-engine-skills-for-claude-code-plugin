@@ -1,6 +1,6 @@
 ---
 name: create-toolset
-description: "Use this skill when authoring or extending an Unreal Engine toolset, a class of static, AI-callable functions registered with `ToolsetRegistry` and exposed through the unreal-mcp server. Trigger when the user wants to add, expose, or register a new tool method, create a new toolset, or extend an existing one such as `BlueprintTools`, `StaticMeshTools`, `ObjectTools`, `LevelTools`, or `MaterialTools`. Concrete triggers: 'add a tool to X', 'expose this via MCP', 'register a function so Claude/the agent can call it', 'wire this into the toolset registry', 'create a new toolset for Y', 'add a Python toolset', 'make this AI-callable'; adding a `static` method to a `*Tools.cpp/.h/.py` file; editing files under a `Toolsets/` folder; designing tool parameters, return types, or struct schemas for a toolset. SKIP for: invoking existing tools at runtime (use unreal-mcp instead), authoring an Agent Skill (use unreal-skill), generic refactors that happen to touch a toolset file but don't add or redesign a tool, or unrelated uses of the word 'toolset'."
+description: "Implement or extend Unreal Engine tools exposed through MCP, including tool schemas, C++ or Python methods, and ToolsetRegistry registration. Check existing Epic and Node Ninja capabilities before adding functionality. For invoking tools use unreal-mcp; for authoring workflow instructions use unreal-skill. Excludes refactors that do not add or redesign tools."
 ---
 
 # Create Toolset
@@ -23,6 +23,8 @@ A good toolset is:
 
 Work through these questions in order before touching any code.
 
+For Node Ninja (including RCTools), check both its installed capabilities and Epic's before adding a tool. A Node Ninja category exposed through Epic may be an adapter over an existing provider: extend that owner using its repository conventions rather than registering a second implementation. The C++ and Python registration recipes below describe Epic-native toolset definitions.
+
 **1. Does the functionality already exist?** If the editor is running, call `list_toolsets` via MCP, then `describe_toolset` on anything relevant. If MCP isn't available, search the codebase for folders named `Toolsets` and read the C++ headers or Python toolset files there. If the capability is already exposed, there's nothing to do. Tell the user and point them to the right tool.
 
 **2. Is the request more general than it sounds?** Users often ask for something domain-specific that is actually an instance of a broader pattern. Before looking for a domain toolset, ask whether the capability truly belongs to that domain or whether it applies more widely. For example, a request for "read blueprint asset metadata" sounds like it belongs in `BlueprintTools`, but metadata applies to all assets, so the right place is `AssetTools`. Solving it generically is almost always better than solving it narrowly.
@@ -33,10 +35,10 @@ Work through these questions in order before touching any code.
 
 **5. Choose the implementation language.** This is the user's call, but help them make an informed one. Python is generally preferred: it's faster to iterate and easier to change. Assess both options:
 
-- **Python**: Check what's available in the Python stubs (`<project_root>/Intermediate/PythonStub/unreal.py`; search it, don't read it wholesale). If the file doesn't exist, the user needs to enable **Developer Mode** in **Edit → Project Settings → Plugins → Python** and restart the editor. This is worth doing for any toolset work, so recommend it proactively. If the necessary APIs are all there, Python is the right choice. If most of the functionality is available but something small is missing, flag the gap to the user; a minor engine tweak may still make Python the better option overall.
+- **Python**: Check available APIs in the Python stubs (`<project_root>/Intermediate/PythonStub/unreal.py`; search it, don't read it wholesale) or the installed engine's Python API/source. If stubs are needed, Developer Mode in the Python project settings generates them after restart. Keep that setup separate from work that can use the existing plugin implementation.
 - **C++**: The right choice when Python coverage is thin or non-existent. Most of what you need simply isn't in the stubs.
 
-Summarize what's available in each and let the user decide before writing any code. If the APIs needed aren't available in either language, don't work around it. Stop and tell the user so they can extend the engine. Workarounds create fragile tools that break silently.
+Prefer the existing owner's implementation language when it already supports the request. Keep Epic's tool implementations, registry, executor and engine unchanged. Use supported native APIs from the Node Ninja plugin for a demonstrated missing capability. If neither path supports it, report the limitation and a concrete plugin-level option rather than silently requiring a custom engine.
 
 ## Shared Conventions
 
