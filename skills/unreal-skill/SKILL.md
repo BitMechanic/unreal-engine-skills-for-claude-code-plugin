@@ -7,6 +7,8 @@ description: "Create, edit, or review an Unreal Engine Agent Skill exposed by th
 
 You are authoring an Unreal Engine Agent Skill: a named, reusable bundle of instructions that packages essential knowledge the agent either doesn't know or needs to pay close attention to. A skill can provide general best practices in a domain, guidance on a specific workflow, or a mix of both.
 
+The skill returns guidance to its caller. It does not create an agent, dispatch a task or evaluate a result; those are optional responsibilities of the surrounding client. Keep the instructions usable by a single agent as well as a delegated one.
+
 ## Principles
 
 A good skill is:

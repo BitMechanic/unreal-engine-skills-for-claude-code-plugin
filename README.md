@@ -48,6 +48,19 @@ claude --plugin-dir "C:\path\to\nodeninja-unreal-engine-skills"
 
 On other machines, substitute the absolute path to this fork. `--plugin-dir` loads the plugin for that session. Use this fork in place of the upstream skill package for the project to avoid competing copies of the same skills. This does not install or configure either Unreal MCP server.
 
+### Keep it loaded for one project
+
+On Claude Code versions supporting skills-directory plugins, put this checkout at `<Project>/.claude/skills/nodeninja-unreal-engine-skills/` (including its `.claude-plugin/plugin.json`), or link that directory to an existing checkout. For example, from the project directory on Windows:
+
+```powershell
+New-Item -ItemType Directory -Force .claude/skills
+New-Item -ItemType Junction -Path .claude/skills/nodeninja-unreal-engine-skills -Target 'C:\path\to\nodeninja-unreal-engine-skills'
+claude plugin list
+claude plugin details nodeninja-unreal-engine-skills@skills-dir
+```
+
+Use an unused link path; do not replace an existing package. Confirm the package is listed as a loaded project skills-directory plugin and its details include all three skills and the SessionStart hook. Start a fresh chat or reload plugins after registration or updates. Reading a `SKILL.md` file manually is not proof that the client loaded the package. This project-local registration does not affect other projects. See Claude Code's [plugin creation documentation](https://code.claude.com/docs/en/plugins/create).
+
 ## Verification
 
 1. Launch Unreal Editor, then run `ModelContextProtocol.StartServer` in the console to start the MCP server.

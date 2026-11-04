@@ -39,6 +39,8 @@ Follow these rules to protect live editor state.
 
 A project or plugin can register **Agent Skills** for naming conventions, setup, or workflows. Discover `AgentSkillToolset` if available; its skill listing is separate from the toolset listing. Node Ninja's existing MCP guide resources are another source of workflow knowledge, not automatically registered Agent Skills.
 
+An Agent Skill supplies instructions to the agent that retrieves it; it does not launch a worker or require delegation. Follow the project's concurrency rules. If delegation is allowed, pass the relevant guidance and a bounded task to the worker and review the resulting native state; sharing a skill does not isolate editor mutations.
+
 Check for them the same way you discover tools, and do it whenever you start unfamiliar work in a project rather than just once:
 
 1. If `AgentSkillToolset` is available, inspect its schema and use `ListSkills` through the discovered route. Load the relevant returned skill paths with `GetSkills`.

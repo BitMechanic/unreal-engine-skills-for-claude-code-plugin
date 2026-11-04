@@ -55,7 +55,11 @@ Dungeon-managed room components permit observation but refuse external in-place 
 
 ## Reuse, capture, and import
 
-For an independent copy within one project, start with native asset duplication. Use Node Ninja's pattern library when the task calls for capturing or importing a reusable snapshot. Search its metadata and prerequisites before importing; inspect the selected pattern rather than loading every candidate.
+Before authoring reusable functionality from scratch, consider both suitable native project assets and the configured external pattern library. A project asset-registry search does not search the JSON library. Read the installed patterns guide and make a bounded metadata search by function and asset family; compare a few descriptions and prerequisites rather than loading every payload. If the library is unexpectedly empty, check its configured location before concluding that no examples exist. Do not assume a collection on disk is visible to the running editor.
+
+For an independent copy already in the project, start with native asset duplication. For a selected external snapshot, import it, inspect the resulting native asset and decide whether to adapt it or copy useful logic through the owner's existing tools. Use the supported families reported by the guide; complete maps, arbitrary data assets and meshes are not automatically pattern types. Do not force a pattern import when native reuse or a small direct edit is simpler.
+
+Native prepared kits can live in enabled content plugins as well as project content. Discover plugin content roots and search by the relevant asset or Blueprint parent class, then inspect the candidate's native configuration and preparation contract. A prepared placement surface or compatible wall assembly offers functionality that a loose mesh does not. Adapt existing assets first; create a content-only kit plugin when cross-project reuse warrants packaging its required content and declaring dependencies. Consult the Dungeon guide for kit and feature constraints.
 
 Keep live asset paths, saved pattern IDs, imported destination paths, and pending job IDs distinct. A pattern read does not inspect later edits to its source. Import success does not prove dependency reconnection, compilation, or behavior. Follow the owner guide for required plugins/types, compatible dependency bindings, import hints, and explicit refresh after edits. Do not infer automatic dependency copying or animation retargeting.
 
