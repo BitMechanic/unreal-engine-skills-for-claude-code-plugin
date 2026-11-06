@@ -1,6 +1,6 @@
 ---
 name: unreal-skill
-description: "Create, edit, or review an Unreal Engine Agent Skill exposed by the editor, including C++ or Python skill classes and Blueprint skill assets. Use for project/plugin workflow instructions, descriptions, and registration. Covers Node Ninja and Epic workflows. For implementing tools use create-toolset; for running existing editor workflows use unreal-mcp. Excludes client-side Claude Code skill files."
+description: "Create, edit, or review an Unreal Engine Agent Skill exposed by the editor, including C++ or Python skill classes and Blueprint skill assets. Use for project/plugin workflow instructions, descriptions, and registration. Covers TheConstructor and Epic workflows. For implementing tools use create-toolset; for running existing editor workflows use unreal-mcp. Excludes client-side Claude Code skill files."
 ---
 
 # Unreal Skill
@@ -31,11 +31,11 @@ Work through these questions before writing anything.
 
 **1. Does the skill already exist?** Call `ListSkills` via MCP to see all registered skills in the project, then `GetSkills` on anything relevant. If the capability is already covered, point the user to the existing skill rather than creating a new one.
 
-For Node Ninja (including RCTools), also check its installed MCP guide resources. Those are maintained with the plugin and are not automatically Agent Skills. Reuse existing guidance; add an Agent Skill only for workflow knowledge that is missing. Discover identifiers at runtime so instructions remain useful across the planned RCTools rename.
+For TheConstructor, also check its installed MCP guide resources. Those are maintained with the plugin and are not automatically Agent Skills. Reuse existing guidance; add an Agent Skill only for workflow knowledge that is missing. Discover identifiers at runtime so instructions remain useful across the planned TheConstructor rename.
 
 **2. Choose the implementation path.** Reuse the owner's existing language and maintained instructions:
 
-- **C++ class**: Use the existing integration module when the owner already supplies a C++ guide. Node Ninja's Animation, StateTree and Dungeon skills use this path without a second guide body or registry.
+- **C++ class**: Use the existing integration module when the owner already supplies a C++ guide. TheConstructor's Animation, StateTree and Dungeon skills use this path without a second guide body or registry.
 - **Python class**: Use the plugin's existing Python package when its instructions and toolsets live there. It is version-controlled with the plugin and registers when imported.
 - **Blueprint skill asset**: Use for project-specific guidance that does not belong in a code plugin. `CreateSkill` creates a Blueprint derived from `UAgentSkill` and returns its generated-class path.
 

@@ -1,7 +1,7 @@
 {
   "name": "nodeninja-unreal-engine-skills",
   "version": "0.1.0",
-  "description": "Use Node Ninja (including RCTools) together with Epic's Unreal Editor tools through live discovery and focused workflow guidance.",
+  "description": "Use TheConstructor together with Epic's Unreal Editor tools through live discovery and focused workflow guidance.",
   "author": {
     "name": "Node Ninja"
   },

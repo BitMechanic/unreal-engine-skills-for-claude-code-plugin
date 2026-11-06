@@ -1,6 +1,6 @@
 ---
 name: create-toolset
-description: "Implement or extend Unreal Engine tools exposed through MCP, including tool schemas, C++ or Python methods, and ToolsetRegistry registration. Check existing Epic and Node Ninja capabilities before adding functionality. For invoking tools use unreal-mcp; for authoring workflow instructions use unreal-skill. Excludes refactors that do not add or redesign tools."
+description: "Implement or extend Unreal Engine tools exposed through MCP, including tool schemas, C++ or Python methods, and ToolsetRegistry registration. Check existing Epic and TheConstructor capabilities before adding functionality. For invoking tools use unreal-mcp; for authoring workflow instructions use unreal-skill. Excludes refactors that do not add or redesign tools."
 ---
 
 # Create Toolset
@@ -23,7 +23,7 @@ A good toolset is:
 
 Work through these questions in order before touching any code.
 
-For Node Ninja (including RCTools), check both its installed capabilities and Epic's before adding a tool. A Node Ninja category exposed through Epic may be an adapter over an existing provider: extend that owner using its repository conventions rather than registering a second implementation. The C++ and Python registration recipes below describe Epic-native toolset definitions.
+For TheConstructor, check both its installed capabilities and Epic's before adding a tool. A TheConstructor category exposed through Epic may be an adapter over an existing provider: extend that owner using its repository conventions rather than registering a second implementation. The C++ and Python registration recipes below describe Epic-native toolset definitions.
 
 **1. Does the functionality already exist?** If the editor is running, call `list_toolsets` via MCP, then `describe_toolset` on anything relevant. If MCP isn't available, search the codebase for folders named `Toolsets` and read the C++ headers or Python toolset files there. If the capability is already exposed, there's nothing to do. Tell the user and point them to the right tool.
 
@@ -38,7 +38,7 @@ For Node Ninja (including RCTools), check both its installed capabilities and Ep
 - **Python**: Check available APIs in the Python stubs (`<project_root>/Intermediate/PythonStub/unreal.py`; search it, don't read it wholesale) or the installed engine's Python API/source. If stubs are needed, Developer Mode in the Python project settings generates them after restart. Keep that setup separate from work that can use the existing plugin implementation.
 - **C++**: The right choice when Python coverage is thin or non-existent. Most of what you need simply isn't in the stubs.
 
-Prefer the existing owner's implementation language when it already supports the request. Keep Epic's tool implementations, registry, executor and engine unchanged. Use supported native APIs from the Node Ninja plugin for a demonstrated missing capability. If neither path supports it, report the limitation and a concrete plugin-level option rather than silently requiring a custom engine.
+Prefer the existing owner's implementation language when it already supports the request. Keep Epic's tool implementations, registry, executor and engine unchanged. Use supported native APIs from the TheConstructor plugin for a demonstrated missing capability. If neither path supports it, report the limitation and a concrete plugin-level option rather than silently requiring a custom engine.
 
 ## Shared Conventions
 

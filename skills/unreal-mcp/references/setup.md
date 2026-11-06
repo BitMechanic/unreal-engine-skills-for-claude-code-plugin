@@ -1,6 +1,6 @@
 # First-Time MCP Server Setup
 
-Read this for first-time Epic MCP configuration or optional proxy installation. Steps 1-3 configure direct HTTP access. Step 4 adds a proxy that keeps the client session open while Unreal is unavailable. Step 5 covers Node Ninja alongside Epic.
+Read this for first-time Epic MCP configuration or optional proxy installation. Steps 1-3 configure direct HTTP access. Step 4 adds a proxy that keeps the client session open while Unreal is unavailable. Step 5 covers TheConstructor alongside Epic.
 
 The goal is three things:
 1. Enable the `ModelContextProtocol` and `AllToolsets` plugins in the project.
@@ -120,15 +120,15 @@ To restore the direct HTTP entry, run the same command with `uninstall` instead 
 
 The proxy stores catalogs in the operating system's user cache directory. Scope includes configuration path, proxy path, engine build identity, and client protocol version. It does not supply a fixed Unreal tool catalog. See the engine's `Extras/Proxy/README.md` for cache behavior and transport limits in your build.
 
-## 5. Node Ninja / RCTools
+## 5. TheConstructor / TheConstructor
 
-Enable the Node Ninja Unreal plugin in the intended project using its installed plugin identity (currently `RCToolsPlugin` in RCTools builds). Keep its existing endpoint configuration. This skill package does not install the Unreal plugin or rename its classes.
+Enable the TheConstructor Unreal plugin in the intended project using its installed plugin identity (`TheConstructor`). Keep its existing endpoint configuration. This skill package does not install the Unreal plugin or rename its classes.
 
-With an integrated build, Epic's toolset listing also includes Node Ninja categories, currently named `RCTools.<Category>`. Describe and call those through Epic's existing connection. If a category is absent, inspect the installed plugin/build and initialization log rather than inventing a registry alias.
+With an integrated build, Epic's toolset listing also includes TheConstructor categories, named `TheConstructor.<Category>`. Describe and call those through Epic's existing connection. If a category is absent, inspect the installed plugin/build and initialization log rather than inventing a registry alias.
 
-The direct Node Ninja MCP connection exposes its native tools plus the domain guide/index resources. It is a separate service, not a duplicate direct connection to Epic's optional proxy. Reuse its configured connection or obtain its actual endpoint from the plugin's startup log/settings; do not assume Epic's `/mcp` URL or a universal port. Epic's client-config generator configures Epic's service, not this second service.
+The direct TheConstructor MCP connection exposes its native tools plus the domain guide/index resources. It is a separate service, not a duplicate direct connection to Epic's optional proxy. Reuse its configured connection or obtain its actual endpoint from the plugin's startup log/settings; do not assume Epic's `/mcp` URL or a universal port. Epic's client-config generator configures Epic's service, not this second service.
 
-Both connections must target the intended editor/project. Verify each required route with a read-only call. An Epic adapter category does not imply that Node Ninja's resource guides or every direct-only operation are exposed through Epic.
+Both connections must target the intended editor/project. Verify each required route with a read-only call. An Epic adapter category does not imply that TheConstructor's resource guides or every direct-only operation are exposed through Epic.
 
 ## Verifying
 

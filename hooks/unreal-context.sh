@@ -74,7 +74,7 @@ elif [ -n "$uproject_filename" ]; then
   context="$context The project is \`$uproject_filename\`."
 fi
 context="$context Prefer Unreal Engine conventions (C++/UObject patterns, Slate, UHT reflection) when suggesting code."
-context="$context Use the \`unreal-mcp\` skill to combine Epic and available Node Ninja tools; Node Ninja includes RCTools. Discover the installed tool names."
+context="$context Use the \`unreal-mcp\` skill to combine Epic and available TheConstructor tools. Discover the installed tool names."
 if [ "$mcp_config_present" = "true" ]; then
   context="$context An \`.mcp.json\` is already present at the project root."
 else

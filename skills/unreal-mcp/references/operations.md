@@ -15,7 +15,7 @@ Run these from the Unreal Editor console (`~`).
 
 ## Tool-search mode
 
-Epic's `tools/list` has two modes, controlled by the `bEnableToolSearch` UPROPERTY on `UModelContextProtocolSettings` (default `true`). This setting does not control the separate direct Node Ninja MCP service:
+Epic's `tools/list` has two modes, controlled by the `bEnableToolSearch` UPROPERTY on `UModelContextProtocolSettings` (default `true`). This setting does not control the separate direct TheConstructor MCP service:
 
 - **`True`** (default): `tools/list` returns `list_toolsets`, `describe_toolset`, and `call_tool`. Schemas are read on demand through `describe_toolset`; those members execute server-side through `call_tool` rather than being registered as new native tools in the client.
 - **`False`**: every toolset tool is exposed as a native MCP tool. The client may still defer loading schemas through its own tool search. Used by the hash-mapping commandlet.
@@ -27,13 +27,13 @@ Override in the same `.ini` used for `bAutoStartServer`:
 bEnableToolSearch=False
 ```
 
-## Node Ninja discovery and mixed connections
+## TheConstructor discovery and mixed connections
 
-Integrated Node Ninja builds register categories with Epic, currently as `RCTools.<Category>`. These are discovered through Epic's toolset listing; the direct Node Ninja connection also exposes native tools and resource guides. Use exact names from the installed build throughout the naming transition.
+Integrated TheConstructor builds register categories with Epic, as `TheConstructor.<Category>`. These are discovered through Epic's toolset listing; the direct TheConstructor connection also exposes native tools and resource guides. Use exact names from the installed build throughout the naming transition.
 
-- **Node Ninja category missing in Epic:** check the plugin is enabled and has initialized in the target editor, inspect its startup log, and verify whether this build includes the integration. Use an already available direct Node Ninja operation when appropriate. Do not treat a missing adapter category as proof that the direct service is down.
-- **Guide resources missing in Epic:** inspect the direct Node Ninja connection's resource list. Adapter tool registration does not move its resources into Epic's AgentSkillToolset.
-- **Epic operation sent to Node Ninja fails:** direct Node Ninja MCP does not proxy Epic tools; use the operation's discovered Epic route.
+- **TheConstructor category missing in Epic:** check the plugin is enabled and has initialized in the target editor, inspect its startup log, and verify whether this build includes the integration. Use an already available direct TheConstructor operation when appropriate. Do not treat a missing adapter category as proof that the direct service is down.
+- **Guide resources missing in Epic:** inspect the direct TheConstructor connection's resource list. Adapter tool registration does not move its resources into Epic's AgentSkillToolset.
+- **Epic operation sent to TheConstructor fails:** direct TheConstructor MCP does not proxy Epic tools; use the operation's discovered Epic route.
 - **References work on one connection only:** confirm both endpoints target the same editor/project and check the expected argument representation. Reacquire references after reconstruction instead of retrying the mutation on another connection.
 
 Discovery failures and permission refusals are different. Do not use an alternate route to bypass a refused permission.
