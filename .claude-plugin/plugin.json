@@ -1,9 +1,9 @@
 {
-  "name": "nodeninja-unreal-engine-skills",
-  "version": "0.1.0",
+  "name": "theconstructor-unreal-engine-skills",
+  "version": "0.1.1",
   "description": "Use TheConstructor together with Epic's Unreal Editor tools through live discovery and focused workflow guidance.",
   "author": {
-    "name": "Node Ninja"
+    "name": "TheConstructor"
   },
   "license": "MIT",
   "repository": "https://github.com/BitMechanic/unreal-engine-skills-for-claude-code-plugin"

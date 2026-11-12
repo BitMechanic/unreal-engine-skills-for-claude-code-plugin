@@ -120,7 +120,7 @@ To restore the direct HTTP entry, run the same command with `uninstall` instead 
 
 The proxy stores catalogs in the operating system's user cache directory. Scope includes configuration path, proxy path, engine build identity, and client protocol version. It does not supply a fixed Unreal tool catalog. See the engine's `Extras/Proxy/README.md` for cache behavior and transport limits in your build.
 
-## 5. TheConstructor / TheConstructor
+## 5. TheConstructor
 
 Enable the TheConstructor Unreal plugin in the intended project using its installed plugin identity (`TheConstructor`). Keep its existing endpoint configuration. This skill package does not install the Unreal plugin or rename its classes.
 

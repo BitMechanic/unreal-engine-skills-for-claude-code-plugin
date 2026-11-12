@@ -23,7 +23,7 @@ This repository contains instructions and a project-detection hook. It does not 
 1. **Unreal Editor** with **ModelContextProtocol** and **AllToolsets**, or the specific Epic toolset plugins needed for your work.
 2. **Editor running to execute tools**, with the MCP server started. Run `ModelContextProtocol.StartServer`, or enable `bAutoStartServer` through `skills/unreal-mcp/references/setup.md`. The optional proxy can keep the client connection open while the editor is stopped.
 3. **A bash shell on `PATH`** - required for the `SessionStart` hook (see **Platform Support**)
-4. **TheConstructor / TheConstructor** enabled in the target Unreal project for its capabilities. Builds with the Epic integration register categories such as `TheConstructor.Blueprint` through Epic's ToolsetRegistry. The direct TheConstructor MCP connection supplies its native tools and guide resources. See [TheConstructor setup](skills/unreal-mcp/references/setup.md#5-node-ninja--theconstructor).
+4. **TheConstructor** enabled in the target Unreal project for its capabilities. Builds with the Epic integration register categories such as `TheConstructor.Blueprint` through Epic's ToolsetRegistry. The direct TheConstructor MCP connection supplies its native tools and guide resources. See [TheConstructor setup](skills/unreal-mcp/references/setup.md#5-theconstructor).
 
 ## Platform Support
 

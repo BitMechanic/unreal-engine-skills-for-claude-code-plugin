@@ -1,6 +1,6 @@
 ---
 name: unreal-mcp
-description: "Inspect, edit, and run Unreal Editor workflows using TheConstructor together with Epic's MCP tools. Use for live assets, graphs, animation, PCG, dungeon rooms, patterns, and editor operations. Also applies to Unreal requests identified by .uproject, Content Browser, or asset names such as BP_, ABP_, and PCG_. Skip pure conceptual or documentation questions."
+description: "Inspect, edit, and run Unreal Editor workflows using TheConstructor together with Epic's MCP tools. Use for live assets, graphs, animation, PCG, dungeon rooms, preparing raw art packs for construction, patterns, and editor operations. Also applies to Unreal requests identified by .uproject, Content Browser, or asset names such as BP_, ABP_, and PCG_. Skip pure conceptual or documentation questions."
 ---
 
 # TheConstructor and Unreal MCP
